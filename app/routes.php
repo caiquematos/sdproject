@@ -11,7 +11,17 @@
 |
 */
 
-Route::get('/', function()
-{
-	return View::make('hello');
-});
+if (Session::get("user") == null) {
+  Route::controller('/', 'UserController');
+} else {
+  
+  Route::get('/logout', function() {
+    Session::flush();
+    return Redirect::guest("/")->with("You have logged out");
+  });
+  
+  Route::get('/', function() {
+    return View::make("hello");
+  });
+  
+}
