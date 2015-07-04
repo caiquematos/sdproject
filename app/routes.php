@@ -24,4 +24,8 @@ if (Session::get("user") == null) {
     return View::make("hello");
   });
   
+  Route::controller('/movies', 'MovieController');
+  Route::controller('/series', 'SerieController');
+  Route::controller('/', 'UserController');
+  
 }
