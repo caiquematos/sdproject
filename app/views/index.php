@@ -29,14 +29,14 @@
          <li class="menu"><a href="html/movies">Movies</a></li>
         <li class="menu"><a href="html/tvshows">TV Shows</a></li>
           <li class="menu"><a href="html/profile">Profile</a></li>
-        <li class="active"><a href="">Logout</a></li>
+        <li class="active"><a href="/logout">Logout</a></li>
           <li></li>
       </ul>
       <ul class="side-nav" id="mobile-demo">
           <li class="menu"><a href="html/movies">Movies</a></li>
         <li class="menu"><a href="html/tvshows">TV Shows</a></li>
           <li class="menu"><a href="html/profile">Profile</a></li>
-        <li class="active"><a href="">Logout</a></li>
+        <li class="active"><a href="/logout">Logout</a></li>
       </ul>
     </div>
       </nav>
@@ -48,21 +48,24 @@
   <div class="container" id="main">
 
     <div class="row center">
-    <form >
+    <form  action="/user/login" method="post">
         <div class="card-panel teal #e0f7fa cyan lighten-5">
         
         <div class="input-field col s12">
-          <input id="username" type="text" >
-          <label for="username" data-error="wrong" data-success="right" >Username</label>
+          <input id="email" name="email" type="email" >
+          <label for="email" data-error="wrong" data-success="right" >Email</label>
         </div>
      
         <div class="input-field col s12">
-          <input id="password" type="password" class="validate">
+          <input id="password" name="password" type="password" class="validate">
           <label for="password">Password</label>
       </div>
       <button class="btn waves-effect waves-light green" type="submit" name="action">Submit</button></br></br>
     <!-- Modal Trigger -->
         <a class="btn waves-effect waves-light modal-trigger" type="submit" name="action" href="#modal1">Create Account</a>
+      <div id="msg" name="msg" >
+        <?php echo Session::get('msg'); ?>
+      </div>
         </div>
       </form>
     </div>
@@ -71,18 +74,19 @@
   <!-- Modal Structure -->
   <div id="modal1" class="modal">
     <div class="modal-content">
+      <form action="/user/register">
       <h4 class="caption center-align">Create Account</h4>
         <div class="row">
         <div class="input-field col s12">
-          <input id="username" type="text" >
+          <input id="username-register" name="username" type="text" >
           <label for="username" data-error="wrong" data-success="right" >Username</label>
         </div>
         <div class="input-field col s12">
-          <input id="email" type="email" class="validate" >
+          <input id="email-register" type="email" name="email" class="validate" >
           <label for="email" data-error="wrong" data-success="right" >Email</label>
         </div>
         <div class="input-field col s12">
-          <input id="password" type="password" class="validate">
+          <input id="password-register" type="password" name="password" class="validate">
           <label for="password">Password</label>
         </div>
             <div class="input-field col s12">
@@ -91,6 +95,10 @@
         </div>
       </div>
       <button class="btn waves-effect waves-light green" type="submit" name="action">Submit</button></br></br>
+      <div id="msg" name="msg" >
+        <?php echo Session::get('msg'); ?>
+      </div>
+    </form>
     </div>
     
   </div>

@@ -21,13 +21,16 @@ class UserController extends \BaseController {
   
   public function anyLogin(){
     $user = User::whereEmail(Input::get("email"))->first();
-
-    if( $user && Hash::check( Input::get("password"), $user->password ) ) {
-      $user->save();
-      Session::put("user", Crypt::encrypt($user->id));
-      return View::make("home")->with("Login realizado com sucesso!");
+    if( $user ) {
+      if ( Hash::check( Input::get("password"), $user->password ) ) {
+        $user->save();
+        Session::put("user", Crypt::encrypt($user->id));
+        return View::make("movies");
+      } else {
+        return Redirect::to("/")->with('msg','Password does not match!');
+      }
     } else {
-      return Redirect::guest("/")->with("Usuário não cadastrado!");
+      return Redirect::to("/")->with('msg','User not registered!');
     }
   }
     
@@ -36,14 +39,14 @@ class UserController extends \BaseController {
 
     if( $user ) {
       return $user;
-      return Redirect::guest("/")->with("Usuário já cadastrado!");
+      return Redirect::guest("/")->with('msg',"User already registered!");
     } else {
       $user = new User;
+      $user->username = Input::get("username");
       $user->email = Input::get("email");
       $user->password = Hash::make(Input::get("password"));
       $user->save();
-      return $user;
-      return Redirect::guest("/")->with("Usuário cadastrado com sucesso! Por favor, realize login!");
+      return Redirect::guest("/")->with('msg',"User registered succefully. Please, log in!");
     }
 
   }

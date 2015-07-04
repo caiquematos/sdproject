@@ -10,9 +10,17 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+Route::get('/logout', function() {
+    Session::flush();
+    return Redirect::guest("/");
+});
+
+Route::get('/', function() {
+    return View::make("index");
+  });
 
 if (Session::get("user") == null) {
-  Route::controller('/', 'UserController');
+  Route::controller('/user', 'UserController');
 } else {
   
   Route::get('/logout', function() {
@@ -21,11 +29,11 @@ if (Session::get("user") == null) {
   });
   
   Route::get('/', function() {
-    return View::make("hello");
+    return View::make("movies");
   });
   
   Route::controller('/movies', 'MovieController');
   Route::controller('/series', 'SerieController');
-  Route::controller('/', 'UserController');
+  Route::controller('/user', 'UserController');
   
 }
