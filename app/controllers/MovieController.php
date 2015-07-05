@@ -20,6 +20,7 @@ class MovieController extends \BaseController {
   
   public function anyAdd(){
     $movie = new Movie;
+    $movie->url = Input::get("web_id");
     $movie->title = Input::get("title");
     $movie->synopsis = Input::get("synopsis");
     $movie->year = Input::get("year");

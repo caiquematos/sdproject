@@ -21,6 +21,7 @@ class SerieController extends \BaseController {
   
   public function anyAdd(){
     $serie = new Serie;
+    $serie->url = Input::get("web_id");
     $serie->title = Input::get("title");
     $serie->synopsis = Input::get("synopsis");
     $year = date("Y", strtotime( Input::get("year") ) );
@@ -100,5 +101,6 @@ class SerieController extends \BaseController {
       return Redirect::guest("/series")->with("Tente mais tarde!");
     }
   }
+  
 
 }

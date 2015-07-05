@@ -25,7 +25,7 @@ class UserController extends \BaseController {
       if ( Hash::check( Input::get("password"), $user->password ) ) {
         $user->save();
         Session::put("user", Crypt::encrypt($user->id));
-        return View::make("movies");
+        return View::share("movies");
       } else {
         return Redirect::to("/")->with('msg','Password does not match!');
       }
@@ -51,7 +51,21 @@ class UserController extends \BaseController {
 
   }
   
-  public function anyToFavoriteMovie() {
+  public function anyMarkAsWatchedMovie() {
+    $user = User::find($this->idUser);
+    $movie = Movie::find(Input::get("movie"));
+    if ( $user && $movie ) {
+      $watched = new WatchedMovie;
+      $watched->user = $user->id;
+      $watched->movie = $movie->id;
+      $watched->save();
+      return $watched;
+    } else {
+      return "Tente mais tarde";
+    }
+  }
+  
+  public function anyMarkAsFavoriteMovie() {
     $user = User::find($this->idUser);
     $movie = Movie::find(Input::get("movie"));
     if ( $user && $movie ) {
@@ -65,7 +79,21 @@ class UserController extends \BaseController {
     }
   }
   
-   public function anyUnfavoriteMovie() {
+  public function anyUnmarkAsWatchedMovie() {
+    $user = User::find($this->idUser);
+    $movie = Movie::find(Input::get("movie"));
+    if ( $user && $movie ) {
+     $favorite = DB::statement("DELETE "
+                . "FROM watched_movies "
+                . "WHERE user=? AND movie=? ",
+                [$this->idUser, $movie->id ]);
+      return Redirect::guest("/movies");
+    } else {
+      return "Tente mais tarde!";
+    }    
+  }
+  
+   public function anyUnmarkAsFavoriteMovie() {
     $user = User::find($this->idUser);
     $movie = Movie::find(Input::get("movie"));
     if ( $user && $movie ) {
@@ -93,7 +121,21 @@ class UserController extends \BaseController {
     }
   }
   
-   public function anyToFavoriteSerie() {
+   public function anyMarkAsWatchedEpisode() {
+    $user = User::find($this->idUser);
+    $episode = Episode::find(Input::get("episode"));
+    if ( $user && $episode ) {
+      $watched = new WatchedEpisode;
+      $watched->user = $user->id;
+      $watched->episode = $episode->id;
+      $watched->save();
+      return $watched;
+    } else {
+      return "Tente mais tarde";
+    }
+  }
+  
+   public function anyMarkAsFavoriteSerie() {
     $user = User::find($this->idUser);
     $serie = Serie::find(Input::get("serie"));
     if ( $user && $serie ) {
@@ -107,14 +149,28 @@ class UserController extends \BaseController {
     }
   }
   
-  public function anyUnfavoriteSerie() {
+  public function anyUnmarkAsFavoriteSerie() {
     $user = User::find($this->idUser);
-    $serie = Serie::find(Input::get("serie"));
+    $serie = Serie::find(Crypt::decrypt(Input::get("serie")));
     if ( $user && $serie ) {
       $favorite = DB::statement("DELETE "
                 . "FROM favorite_series "
                 . "WHERE user=? AND serie=? ",
                 [$this->idUser, $serie->id ]);
+      return Redirect::guest("/series");
+    } else {
+      return "Tente mais tarde!";
+    }
+  }
+  
+  public function anyUnmarkAsWatchedEpisode() {
+    $user = User::find(Crypt::decrypt($this->idUser));
+    $episode = Episode::find(Input::get("episode"));
+    if ( $user && $episode ) {
+      $favorite = DB::statement("DELETE "
+                . "FROM watched_episodes "
+                . "WHERE user=? AND episode=? ",
+                [$this->idUser, $episode->id ]);
       return Redirect::guest("/series");
     } else {
       return "Tente mais tarde!";
@@ -127,11 +183,27 @@ class UserController extends \BaseController {
       $favorites = FavoriteSerie::whereUser($user->id)->get();
       $series = [];
       foreach ( $favorites as $favorite ) {
-        $series[] = Serie::find($favorite->serie);
+        $serie = Serie::find($favorite->serie);
+        $serie->id = Crypt::encrypt($serie->id);
+        $series[] = $serie;
       }
       return $series;
     } else {
       return Redirect::guest("/")->with("Tente mais tarde!");
+    }
+  }
+  
+   public function anyWatchedEpisodes() {
+    $user = User::find($this->idUser);
+    $serie = Serie::find(Input::get("serie"));
+    if ( $user && $serie ) {
+      $seasons = Season::whereSerie($serie->id)->get();
+      foreach ($seasons as $season ) {
+        $episodes[] = Episode::whereSeason($season->id)->get();
+      }
+      return episodes;
+    } else {
+      return Redirect::guest("/")->with('msg',"Tente mais tarde!");
     }
   }
 }

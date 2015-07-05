@@ -29,7 +29,8 @@ if (Session::get("user") == null) {
   });
   
   Route::get('/', function() {
-    return View::make("movies");
+    //return Redirect::to("/movies");
+     return View::make('index')->nest('movies', 'movies'); 
   });
   
   Route::controller('/movies', 'MovieController');

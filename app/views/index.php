@@ -20,28 +20,36 @@
   
   <body>     
 
-   <div class="navbar-fixed">
+ <div class="navbar-fixed">
        <nav>
     <div class="nav-wrapper">
       <a href="#!" class="brand-logo"><img  src="img/ico.png"></a>
       <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
       <ul class="right hide-on-med-and-down">       
-         <li class="menu"><a href="html/movies">Movies</a></li>
+        <li><a class="dropdown-button" href="html/movies" data-activates="dropdown1">Movies</a></li>
         <li class="menu"><a href="html/tvshows">TV Shows</a></li>
-          <li class="menu"><a href="html/profile">Profile</a></li>
-        <li class="active"><a href="/logout">Logout</a></li>
+        <li class="menu"><a href="html/profile">Profile</a></li>
+        <li class="active"><a href="">Logout</a></li>
           <li></li>
       </ul>
       <ul class="side-nav" id="mobile-demo">
-          <li class="menu"><a href="html/movies">Movies</a></li>
+          <!-- Dropdown Trigger -->      
+        <li><a>Movies</a></li>
         <li class="menu"><a href="html/tvshows">TV Shows</a></li>
-          <li class="menu"><a href="html/profile">Profile</a></li>
-        <li class="active"><a href="/logout">Logout</a></li>
+        <li class="menu"><a href="html/profile">Profile</a></li>
+        <li class="active"><a href="">Logout</a></li>
       </ul>
     </div>
       </nav>
+       <!-- Dropdown Structure -->
+<ul id="dropdown1" class="dropdown-content">
+  <li class="menu"><a href="movies.html#popular">Popular</a></li>
+  <li class="menu"><a href="movies.html#genre">Genre</a></li>
+  <li class="menu"><a href="movies.html#year">Year</a></li>
+</ul>
 </div>            
 
+    
       
     </br>
 
@@ -129,14 +137,21 @@
 $(document).ready(function(){
     $('.modal-trigger').leanModal();
     $(".menu a").click(function(e){
-                        e.preventDefault();
                         var href = $( this ).attr('href');
                         $("#main").load(href);
+                        location.hash = href.substring(12);
+                        return false;
             });
     });
         
             $(".button-collapse").sideNav();
-      
+        
+$(function(){
+  if (location.hash.length > 2) {
+      $(".menu a[href='html/"+location.hash.substring(1)+"']").click();
+  }
+});
+   
     </script>
     
   </body>
